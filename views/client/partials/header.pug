@@ -1,0 +1,9 @@
+div(class="header") 
+  a(href="/chat") 
+    h2(class="header-title") CHAT APP 
+  div(class="header-button")
+    if (user)
+      a(href="/user/logout") Logout
+    else
+      a(href="/user/login") Login 
+      a(href="/user/register") Register
