@@ -7,6 +7,8 @@ module.exports.index = async (req, res) => {
       console.log("Có 1 user được kết nối", socket.id);
 
       socket.on("CLIENT_SEND_MESSAGE", async (data) => {
+
+        console.log(data.images);
         const dataChat = {
           userId: res.locals.user.id,
           content: data.content,
@@ -20,7 +22,17 @@ module.exports.index = async (req, res) => {
           content: data.content,
         });
       });
+
+      socket.on("CLIENT_SEND_TYPING", (type) => {
+        socket.broadcast.emit("SERVER_RETURN_TYPING", {
+          userId: res.locals.user.id,
+          fullName: res.locals.user.fullName,
+          type: type,
+        });
+      });
     });
+
+    
     const chats = await ChatModel.find({
       deleted: false,
     });

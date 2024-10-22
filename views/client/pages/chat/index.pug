@@ -3,7 +3,7 @@ extends ../../layouts/default.pug
 block main
 
   .container
-    .chat
+    div(class="chat" user-id=user.id)
       .inner-body
         each chat in chats
           div(
@@ -18,6 +18,8 @@ block main
               .inner-name #{chat.fullName}
             .inner-content
               | #{chat.content}
+
+
         //- .inner-incoming
         //-   .inner-name Em Yêu
         //-   .inner-content
@@ -36,6 +38,8 @@ block main
         //-   .inner-name Em Yêu
         //-   .inner-content
         //-     | Thì em bảo nhà e không ai ở nhà mà :))
+
+        div(class="inner-list-typing")
       .inner-foot
         form(
           class="inner-form"
@@ -47,5 +51,13 @@ block main
             placeholder="Nhập nội dung..."
             name="content"
           )
+          span(class="button-icon btn btn-light mx-1") <i class="fa-regular fa-face-smile"></i>
+          label(class="btn btn-light mx-1" for="file-upload-with-preview-upload-images") <i class="fa-regular fa-images"></i>
           button
             i.fa-solid.fa-paper-plane
+
+        div(class="tooltip" role="tooltip")
+          emoji-picker(class="light")
+
+      .inner-preview-images
+        div(class="custom-file-container" data-upload-id="upload-images")
