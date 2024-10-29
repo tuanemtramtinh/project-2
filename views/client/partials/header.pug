@@ -1,8 +1,10 @@
 div(class="header") 
-  a(href="/chat") 
+  a(href="/user/friends") 
     h2(class="header-title") CHAT APP 
   div(class="header-button")
     if (user)
+      a(href="/user/friends") Bạn bè
+      a(href="/user/rooms") Phòng chat  
       a(href="/user/logout") Logout
     else
       a(href="/user/login") Login 

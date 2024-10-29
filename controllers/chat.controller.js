@@ -1,30 +1,47 @@
 const ChatModel = require("../models/chat.model");
 const UserModel = require("../models/user.model");
+const uploadHelper = require("../helpers/uploadHelper");
 
 module.exports.index = async (req, res) => {
   try {
+    const roomChatId = req.params.roomChatId;
+
     _io.once("connection", (socket) => {
+      socket.join(roomChatId);
+
       console.log("Có 1 user được kết nối", socket.id);
 
       socket.on("CLIENT_SEND_MESSAGE", async (data) => {
+        // console.log(data.images);
 
-        console.log(data.images);
+        // console.log(await uploadHelper(data.images[0]));
+
+        const images = [];
+
+        for (const image of data.images) {
+          const imageUrl = (await uploadHelper(image)).url;
+          images.push(imageUrl);
+        }
+
         const dataChat = {
           userId: res.locals.user.id,
+          roomChatId: roomChatId,
           content: data.content,
+          images: images,
         };
 
         await ChatModel.create(dataChat);
 
-        _io.emit("SERVER_RETURN_MESSAGE", {
+        _io.to(roomChatId).emit("SERVER_RETURN_MESSAGE", {
           userId: res.locals.user.id,
           fullName: res.locals.user.fullName,
           content: data.content,
+          images: images,
         });
       });
 
       socket.on("CLIENT_SEND_TYPING", (type) => {
-        socket.broadcast.emit("SERVER_RETURN_TYPING", {
+        socket.broadcast.to(roomChatId).emit("SERVER_RETURN_TYPING", {
           userId: res.locals.user.id,
           fullName: res.locals.user.fullName,
           type: type,
@@ -32,8 +49,8 @@ module.exports.index = async (req, res) => {
       });
     });
 
-    
     const chats = await ChatModel.find({
+      roomChatId: roomChatId,
       deleted: false,
     });
 
