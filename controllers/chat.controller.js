@@ -19,7 +19,7 @@ module.exports.index = async (req, res) => {
         const images = [];
 
         for (const image of data.images) {
-          const imageUrl = (await uploadHelper(image)).url;
+          const imageUrl = (await uploadHelper(image)).secure_url;
           images.push(imageUrl);
         }
 
