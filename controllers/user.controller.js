@@ -91,7 +91,7 @@ module.exports.registerPost = async (req, res) => {
 
     res.cookie("tokenUser", token);
 
-    res.redirect("/chat");
+    res.redirect("/");
   } catch (error) {
     console.log(error);
   }
